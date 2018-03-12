@@ -13,6 +13,15 @@ This Add-On allows the analyst to collect data from the Canary Tools API.  In ad
 ## Thinkst Canary AddOn For Splunk
 This Add-On requires access to the Canary Tools API and for the API to be enabled within your Canary Console and the Splunk Common Information Model App located [here](https://splunkbase.splunk.com/app/1621/).  In addition a heavy forwarder will need to be setup as this will act as the server that collects data for indexing.
 
+## Features
+- Collect data related to incidents
+- Collect data related to devices
+- Collect data related to tokens
+- Adaptive Response Action to acknowledge incidents
+- Adaptive Response Action to delete incidents
+- CIM Mapping to Intrusion Detection to enable integration with Splunk Enterprise Security
+
+## Setup
 ### Canary Tools Setup
 1. Visit your canary console by going to https://yourconsole.canary.tools/settings
 2. Scroll down to API and click on.
