@@ -187,14 +187,31 @@ def collect_events(helper, ew):
         #If the resposne code from querying the Registered devices is not 200
         else:
             helper.log_error("Error occured with canary.tools API call. Error Message: {}".format(response_regDevices.json()))
-        
-        #If we receive a 200 response from the canary tokens API    
+
+        #If we receive a 200 response from the canary tokens API
         if response_canarytokens_fetch.status_code == 200:
             #Output the results to json
             data = response_canarytokens_fetch.json()
             
             if len(data['tokens']) >0:
                 for a in data['tokens']:
+                    #Only create a token event for new or changed tokens
+                    check_point_key = 'token:'+a['node_id']
+                    saved_data = helper.get_check_point(check_point_key)
+                    if not saved_data:
+                        saved_data = {}
+
+                    monitor_fields = ['memo','enabled']
+                    fields_changed = False
+                    for field in monitor_fields:
+                        if a.get(field, None) != saved_data.get(field, None):
+                            fields_changed = True
+                            break
+                    if not fields_changed:
+                        continue
+                    helper.save_check_point(check_point_key, a)
+
+
                     #Add current time of server to timestamp
                     a['_time'] = current_time
                     #Convert data to a string
