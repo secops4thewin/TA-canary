@@ -150,6 +150,23 @@ def collect_events(helper, ew):
             data = response_regDevices.json()
             if len(data['devices']) >0:
                 for a in data['devices']:
+                    #Only create a device event for new or changed devices
+                    check_point_key = 'device:'+a['id']
+                    saved_data = helper.get_check_point(check_point_key)
+                    if not saved_data:
+                        saved_data = {}
+
+                    monitor_fields = ['name', 'description', 'ip_address', 'live', 'version']
+                    fields_changed = False
+                    for field in monitor_fields:
+                        if a.get(field, None) != saved_data.get(field, None):
+                            fields_changed = True
+                            break
+                    if not fields_changed:
+                        continue
+                    helper.save_check_point(check_point_key, a)
+
+
                     #Add current time of server to timestamp
                     a['_time'] = current_time
                     #Convert data to a string
