@@ -1,0 +1,79 @@
+[props/canary_api]
+owner = admin
+version = 7.0.0
+modtime = 1520763473.424269000
+
+[props/source%3A%3A...ta-canary%2A.log%2A]
+owner = admin
+version = 7.0.0
+modtime = 1520763473.626716000
+
+[props/source%3A%3A...ta_canary%2A.log%2A]
+owner = admin
+version = 7.0.0
+modtime = 1520763473.752282000
+
+[ta_canary_settings/additional_parameters]
+version = 7.0.0
+modtime = 1521716273.888449000
+
+[props/source%3A%3A...canary_acknowledge_incident_modalert.log%2A]
+owner = admin
+version = 7.0.0
+modtime = 1520765483.163500000
+
+[props/source%3A%3A...canary_delete_an_incident_modalert.log%2A]
+owner = admin
+version = 7.0.0
+modtime = 1520800188.914482000
+
+[ta_canary_settings/logging]
+version = 7.0.0
+modtime = 1520802174.945787000
+
+[collections/TA_canary_checkpointer]
+owner = splunk-system-user
+version = 7.0.0
+modtime = 1520803695.773050000
+
+[props/canarytools_devices]
+owner = admin
+version = 7.0.0
+modtime = 1520810745.872387000
+
+[props/canarytools_tokens]
+owner = admin
+version = 7.0.0
+modtime = 1520810790.722922000
+
+[eventtypes/canary_incidents]
+owner = admin
+version = 7.0.0
+modtime = 1520815479.804971000
+
+[tags/eventtype%3Dcanary_incidents]
+owner = admin
+version = 7.0.0
+modtime = 1520836075.657264000
+
+[props/canarytools_incidents]
+owner = admin
+version = 7.0.0
+modtime = 1520836623.210100000
+
+[macros/canary_tools_index]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 7.0.0
+modtime = 1520836888.446743000
+
+[props/canary_device]
+owner = admin
+version = 7.0.0
+modtime = 1522544660.274790000
+
+[props/canary_daily_poll]
+owner = admin
+version = 7.0.0
+modtime = 1522545724.015559000

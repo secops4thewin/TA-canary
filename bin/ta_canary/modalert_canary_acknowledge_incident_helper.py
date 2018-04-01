@@ -11,6 +11,12 @@ def process_event(helper, *args, **kwargs):
 
     [sample_code_macro:start]
 
+    # The following example gets the setup parameters and prints them to the log
+    canary_domain = helper.get_global_setting("canary_domain")
+    helper.log_info("canary_domain={}".format(canary_domain))
+    api_key = helper.get_global_setting("api_key")
+    helper.log_info("api_key={}".format(api_key))
+
     # The following example sends rest requests to some endpoint
     # response is a response object in python requests library
     response = helper.send_http_request("http://www.splunk.com", "GET", parameters=None,
@@ -33,12 +39,6 @@ def process_event(helper, *args, **kwargs):
 
     # The following example gets and sets the log level
     helper.set_log_level(helper.log_level)
-
-    # The following example gets the setup parameters and prints them to the log
-    canary_domain = helper.get_global_setting("canary_domain")
-    helper.log_info("canary_domain={}".format(canary_domain))
-    api_key = helper.get_global_setting("api_key")
-    helper.log_info("api_key={}".format(api_key))
 
     # The following example gets the alert action parameters and prints them to the log
     incident_id = helper.get_param("incident_id")
@@ -93,21 +93,25 @@ def process_event(helper, *args, **kwargs):
     #Get current time for testing purposes.    
     current_time = time.time()
     
+    #Post Data
+    #post_data = "incident={}".format(incident_id)
+    post_data = "incident={}".format(incident_id)
+    
     #Pass the domain and the api key to the url.
-    url = "https://{}.canary.tools/api/v1/incident/acknowledge?auth_token={}&incident={}".format(domain,api_key,incident_id)
+    url = "https://{}.canary.tools/api/v1/incident/acknowledge?auth_token={}".format(domain,api_key)
     
     #Set the method of Get to the console
     method = "POST"
     
     #Try the first connection to see if it works.
-    response = helper.send_http_request(url, method, parameters=None,payload=None, headers=headers, cookies=None, verify=True, cert=None, timeout=None, use_proxy=use_proxy)
+    response = helper.send_http_request(url, method, parameters=post_data,payload=None, headers=headers, cookies=None, verify=True, cert=None, timeout=None, use_proxy=use_proxy)
     
     
     try:
         response    
         
     except Exception as e:
-        helper.log_error("Error occured with canary.tools Acknowledging an incident. Error Message: {}".format(e))
+        helper.log_error("Error occured with canary.tools Acknowledging an incident. Error Message: {}, Attempted URL: {}".format(e,url))
         sys.exit()
     
     if response.status_code == 200:
@@ -127,10 +131,11 @@ def process_event(helper, *args, **kwargs):
         data = response.json()
         data['api_call'] = 'Incident Acknowledged'
         data['_time'] = current_time
+        data['url'] = url
         json_data = json.dumps(data)
         helper.addevent(json_data, sourcetype="canarytools:ar")
         helper.writeevents(source="canary_toolsapi", index=index_name, host="adaptive_response")
-        helper.log_error("Error with acknowledging incident.")
+        helper.log_error("Error occured with canary.tools Acknowledging an incident. Attempted URL: {}".format(url))
         
     # TODO: Implement your alert action logic here
     return 0
