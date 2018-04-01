@@ -33,11 +33,7 @@ def collect_events(helper, ew):
     else:
         use_proxy = False
 
-<<<<<<< HEAD
     #Set a custom useragent header for Splunk API so Canary.tools can measure the use of the product
-=======
-    #Set a custom useragent header for Splunk API so Canary.tools can see the use of the product
->>>>>>> f11e23d9ce7b9bcda48fc228fb0509846cc1bd8d
     headers = {'User-Agent': 'Splunk API Call'}
 
     #Pass the domain and the api key to the url.
@@ -87,22 +83,14 @@ def collect_events(helper, ew):
         #Throw an exception if it fails
         except Exception as e:
             helper.log_error("Error occured with canary.tools API call to retrieve all registered devices. Error Message: {}".format(e))
-<<<<<<< HEAD
             sys.exit()
-=======
-
->>>>>>> f11e23d9ce7b9bcda48fc228fb0509846cc1bd8d
         #Try to connect to the url for canary tokens
         try:
             response_canarytokens_fetch
         #Throw an exception if it fails
         except Exception as e:
             helper.log_error("Error occured with canary.tools API call to retrieve all canary tokens. Error Message: {}".format(e))
-<<<<<<< HEAD
             sys.exit()
-=======
-
->>>>>>> f11e23d9ce7b9bcda48fc228fb0509846cc1bd8d
         #Issue a new response to the All Incidents API
         response_allIncidents = helper.send_http_request(url_allIncidents, method,headers=headers, verify=True, timeout=60, use_proxy=use_proxy)
 
@@ -112,16 +100,11 @@ def collect_events(helper, ew):
         #Throw an exception if it fails
         except Exception as e:
             helper.log_error("Error occured with canary.tools API call to retrieve all Incidents. Error Message: {}".format(e))
-<<<<<<< HEAD
             sys.exit()
         #Set the most recent timestamp to the current time.
         most_recent_timestamp = current_time
         
         
-=======
-
-        most_recent_timestamp = 0
->>>>>>> f11e23d9ce7b9bcda48fc228fb0509846cc1bd8d
         while response_allIncidents.status_code == 200:
             #If we receive a 200 response from the all incidents API
             #Output the results to json
@@ -141,27 +124,13 @@ def collect_events(helper, ew):
                         if created_timestamp > most_recent_timestamp:
                             most_recent_timestamp = created_timestamp
                     except (KeyError, ValueError) as e:
-<<<<<<< HEAD
                         helper.log_error("Error updating timestamp {}".format(e))
-=======
-                        helper.log_info("Error updating timestamp {}".format(e))
->>>>>>> f11e23d9ce7b9bcda48fc228fb0509846cc1bd8d
 
             else:
                 #If no incidents have been logged
                 #Add current time of server to timestamp
-<<<<<<< HEAD
                 helper.log_info("No incidents have been logged. Successful connection to canaryapi")
                 
-=======
-                data['_time'] = current_time
-                #Convert data to a string
-                data_dump = json.dumps(data)
-                #Write the event to the destination index
-                event = helper.new_event(data_dump, source=helper.get_input_type(), index=helper.get_output_index(),sourcetype="canarytools:incidents")
-                ew.write_event(event)
-
->>>>>>> f11e23d9ce7b9bcda48fc228fb0509846cc1bd8d
             if not data['cursor']['next']:
                 break
 
@@ -172,10 +141,7 @@ def collect_events(helper, ew):
 
         if most_recent_timestamp:
             helper.save_check_point('last_seen_time', most_recent_timestamp)
-<<<<<<< HEAD
             helper.log_debug("Setting last_seen_time checkpoint to {}".format(most_recent_timestamp))
-=======
->>>>>>> f11e23d9ce7b9bcda48fc228fb0509846cc1bd8d
 
         #If we receive a 200 response from the registered devices API
         if response_regDevices.status_code == 200:
