@@ -101,10 +101,12 @@ def collect_events(helper, ew):
         except Exception as e:
             helper.log_error("Error occured with canary.tools API call to retrieve all Incidents. Error Message: {}".format(e))
             sys.exit()
-        #Set the most recent timestamp to the current time.
-        most_recent_timestamp = current_time
-        
-        
+
+        #Set the most recent timestamp to the last seen incident timestamp, or the epoch
+        most_recent_timestamp = helper.get_check_point('last_seen_time')
+        if not most_recent_timestamp:
+            most_recent_timestamp = 0
+
         while response_allIncidents.status_code == 200:
             #If we receive a 200 response from the all incidents API
             #Output the results to json
@@ -120,9 +122,12 @@ def collect_events(helper, ew):
                     event = helper.new_event(data_dump, source=helper.get_input_type(), index=helper.get_output_index(),sourcetype="canarytools:incidents")
                     ew.write_event(event)
                     try:
-                        created_timestamp = long(a['description']['created'])
-                        if created_timestamp > most_recent_timestamp:
-                            most_recent_timestamp = created_timestamp
+                        try:
+                            incident_timestamp = long(time.mktime(time.strptime(a['updated_std'], "%Y-%m-%d %H:%M:%S UTC+0000")))
+                        except:
+                            incident_timestamp = long(a['description']['created'])
+                        if incident_timestamp > most_recent_timestamp:
+                            most_recent_timestamp = incident_timestamp
                     except (KeyError, ValueError) as e:
                         helper.log_error("Error updating timestamp {}".format(e))
 
